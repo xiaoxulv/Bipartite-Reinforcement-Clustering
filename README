@@ -1,0 +1,46 @@
+This README describes the data and formatting for the 11-441/641/741 HW2 assignment.  Please read this first before beginning the assignment.
+
+DATA
+-----
+The data consists of the following files:
+
+"HW2_dev.rawText" -- TDT4-dev raw text
+"HW2_dev.docVectors" -- TDT4-dev within-document term frequency (TF) vectors (after stemming/stopword removal)
+"HW2_dev.dict" -- TDT4-dev index to word dictionary file
+"HW2_dev.df" -- TDT4-dev list of document frequencies for each term
+"HW2_dev.gold_standards" -- TDT4-dev gold standards
+"HW2_test.rawText" -- TDT4-test raw text
+"HW2_test.docVectors" -- TDT4-test within-document term frequency (TF) vectors (after stemming/stopword removal)
+"HW2_test.dict" -- TDT4-test index to word dictionary file
+"HW2_test.df" -- TDT4-test list of document frequencies for each term
+
+Your program will need to run on the .docVectors format.  In your initial experiments, you will use exactly the files provided; in your custom algorithm, you may choose to weight the terms differently (such as TF-IDF).  We have provided a list of document frequencies for your convenience if you choose this option -- please note that these are DF terms, not IDF terms, and will need to be converted to IDF.  See the lecture notes or Chris Manning's IR book (available oneline) for reference.
+
+The document vector files contain one document vector per line, given in the following format:
+
+wordIndex1:frequency wordIndex2:frequency ... wordIndexFinal:frequency
+
+Note that the data is stored sparsely. In other words, no word index will have a zero frequency, and similarly not every document will have every word index.  In addition, you should note that the word indexes are numbers, not strings.  This is common IR practice to replace a word with a numerical index.  The .dict files contain the mappings between words and indices, one word per line, given in the following format:
+
+word word_index
+
+The raw text is provided in case you are interested to analyze the source documents, but it is not necessary to work with these files.
+
+Gold standards are provided for the development set, but not the test set.  You will need to use your best judgment to decide which result to submit for the test set.
+
+EVALUATION
+-----------
+We have provided a python script to evaluate your output clusters against the gold standard clusters.  Please write your document cluster output in the following format(one documentID, one clusterID per line):
+
+docID clusterID
+docID clusterID
+...
+docID clusterID
+
+The evaluation program does not depend on the order in which you give document ids. However, they must index starting from 0 (i.e. your document ids will range from 0 to total documents - 1).
+
+For your output word clusters, you may use any format you like.  These are not evaluated by our script, so write them in whatever format makes it easier for you to analyze them.
+
+------------------------------
+
+If there any any questions, please feel free to contact the TAs through Piazza.  Best of luck!
