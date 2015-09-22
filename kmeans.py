@@ -49,20 +49,6 @@ def getCluster(data, centers):
         except:
             clusters[y] = [x]
 
-    # empty clusters handling here
-    #if len(clusters) < centers.shape[0]:
-
-    #if len(clusters) < centers.shape[0]:
-    #    print "empty!"
-    #    print len(clusters)
-
-    #     emp = [e for e in xrange(centers.shape[0]) if e not in clusters.keys()]
-    #     for e in emp:
-    #         clusters[assign[e]].remove(e)
-    #         assign[e] = e
-    #         clusters[e] = [e]
-
-
     return (clusters, assign.tolist())
 
 

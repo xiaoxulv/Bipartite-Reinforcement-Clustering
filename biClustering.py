@@ -8,8 +8,8 @@ import kmeans
 def BiClustering(data, k1, k2):
 
     word2Dcluster, doc2D = kmeans.Kmean(data, k1)
-    # base = "docCluster"
-    # s = [base+str(x) for x in xrange(20)]
+    base = "docCluster"
+    s = [base+str(x) for x in xrange(20)]
 
     iter = 0
     while iter < 20:
@@ -24,14 +24,14 @@ def BiClustering(data, k1, k2):
         for i in doc2D.keys():
             word2Dcluster[i] = np.mean(data[doc2D[i]], axis = 0)
 
-        # # for debug here
-        # assign = np.array([-1]*data.shape[0])
-        # for key, value in doc2D.iteritems():
-        #     for v in value:
-        #         assign[v] = key
-        # with open(s[iter], 'w') as dc:
-        #     for idx, item in enumerate(assign):
-        #         dc.write("%d %d\n" % (idx,item))
+        # for debug here
+        assign = np.array([-1]*data.shape[0])
+        for key, value in doc2D.iteritems():
+            for v in value:
+                assign[v] = key
+        with open(s[iter], 'w') as dc:
+            for idx, item in enumerate(assign):
+                dc.write("%d %d\n" % (idx,item))
 
         iter += 1
 
