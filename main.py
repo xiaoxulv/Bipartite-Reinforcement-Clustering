@@ -3,9 +3,11 @@ __author__ = 'Ariel'
 import numpy as np
 import time
 import math
-import kmeans
 import biClustering
+import biClustering_wf
 import newEval
+import kmeans_w
+
 
 start = time.time()
 
@@ -46,18 +48,13 @@ with open("HW2_dev.df") as df:
         idf.append(int(line.split(":")[1]))
 for i, x in enumerate(idf):
    idf[i] = math.log(M.shape[0]/x+1)
-
+# multiply by idf
 for x in xrange(M.shape[1]):
     M[:,x] = M[:,x] * idf[x]
 
+#centers, clusters = kmeans_w.Kmean(M,20)
 
-
-#kmeans.Kmean(M,50)
-#kmeans.Kmean(M.transpose(),200)
-doc2D, word2W = biClustering.BiClustering(M, 150, 800)
-print(" %s seconds " % (time.time()-start))
-print len(doc2D)
-
+doc2D, word2W, cosD, cosW = biClustering_wf.BiClustering(M, 200, 1000)
 assign = np.array([-1]*M.shape[0])
 for key, value in doc2D.iteritems():
     for v in value:
@@ -66,38 +63,79 @@ for key, value in doc2D.iteritems():
 with open("dev_docCluster.txt", 'w') as dc:
     for idx, item in enumerate(assign):
         dc.write("%d %d\n" % (idx,item))
+f1 = newEval.getF1("HW2_dev.gold_standards", "dev_docCluster.txt")
+print f1
+print cosD
+print cosW
+# # repeat for 10 times
+# iter = 0
+# f1s = []
+# cosDs =[]
+# cosWs = []
+#
+# while iter < 10:
+#     doc2D, word2W, cosD, cosW = biClustering.BiClustering(M, 200, 900)
+#
+#     #print(" %s seconds " % (time.time()-start))
+#     #print len(doc2D)
+#
+#     assign = np.array([-1]*M.shape[0])
+#     for key, value in doc2D.iteritems():
+#         for v in value:
+#             assign[v] = key
+#
+#     with open("dev_docCluster.txt", 'w') as dc:
+#         for idx, item in enumerate(assign):
+#             dc.write("%d %d\n" % (idx,item))
+#     f1 = newEval.getF1("HW2_dev.gold_standards", "dev_docCluster.txt")
+#     f1s.append(f1)
+#
+#     cosDs.append(cosD)
+#     cosWs.append(cosW)
+#     iter += 1
+#
+# for x in f1s:
+#     print x
+# print "!!!"
+# for x in cosDs:
+#     print x
+# print "!!!"
+# for x in cosWs:
+#     print x
+# print "!!!"
+# print "The mean of F1 is %f" % np.mean(f1s)
+# print "The variance of F1 is %f" % np.var(f1s)
+# print "The max of F1 is %F" % np.max(f1s)
+# #print "The F1 of best sum of cosine similarity is" %
 
-print newEval.getF1("HW2_dev.gold_standards", "dev_docCluster.txt")
 
-##########
-assign = np.array([-1]*M.shape[1])
-for key, value in word2W.iteritems():
-    for v in value:
-        assign[v] = key
-
-wordDict = {}
-with open("HW2_dev.dict",'r') as wd:
-    for line in wd:
-        line = line.strip()
-        wordDict[int(line.split(" ")[1])] = line.split(" ")[0]
-
-
-
-
-with open("dev_wordCluster.txt", 'w') as dc:
-    for idx, item in enumerate(assign):
-        dc.write("%s %d\n" % (wordDict[idx],item))
+# # get word clusters and write to file using word dictionary
+# assign = np.array([-1]*M.shape[1])
+# for key, value in word2W.iteritems():
+#     for v in value:
+#         assign[v] = key
+#
+# wordDict = {}
+# with open("HW2_dev.dict",'r') as wd:
+#     for line in wd:
+#         line = line.strip()
+#         wordDict[int(line.split(" ")[1])] = line.split(" ")[0]
+#
+#
+# with open("dev_wordCluster.txt", 'w') as dc:
+#     for idx, item in enumerate(assign):
+#         dc.write("%s %d\n" % (wordDict[idx],item))
 
 
-#f1 store for each iteration
-res = []
-base = "docCluster"
-s = [base+str(x) for x in xrange(20)]
-for x in xrange(20):
-    temp = newEval.getF1("HW2_dev.gold_standards",s[x])
-    print temp
-    res.append(temp)
-res = np.array(res)
-print ("F1 mean is %f" % np.mean(res))
+# #f1 store for each iteration through the Bipartite Clustering
+# res = []
+# base = "docCluster"
+# s = [base+str(x) for x in xrange(20)]
+# for x in xrange(20):
+#     temp = newEval.getF1("HW2_dev.gold_standards",s[x])
+#     print temp
+#     res.append(temp)
+# res = np.array(res)
+# print ("F1 mean is %f" % np.mean(res))
 
 
