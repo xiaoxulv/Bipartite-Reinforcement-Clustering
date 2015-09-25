@@ -15,7 +15,7 @@ doc_idx = 0
 row = []
 col = []
 weight = []
-with open("HW2_dev.docVectors",'r') as dv:
+with open("HW2_test.docVectors",'r') as dv:
     for line in dv:
         line = line.rstrip()#remove the trailing newline
         pairs = line.split(" ")
@@ -42,7 +42,7 @@ for (x,y,z) in zip(row, col, weight):
 M = (M.transpose()/np.linalg.norm(M, axis=1)).transpose()
 # read df here
 idf = []
-with open("HW2_dev.df") as df:
+with open("HW2_test.df") as df:
     for line in df:
         line = line.strip()
         idf.append(int(line.split(":")[1]))
@@ -52,29 +52,31 @@ for i, x in enumerate(idf):
 for x in xrange(M.shape[1]):
     M[:,x] = M[:,x] * idf[x]
 
-#centers, clusters = kmeans_w.Kmean(M,20)
 
-doc2D, word2W, cosD, cosW = biClustering_wf.BiClustering(M, 200, 1000)
+
+# only 1 time
+doc2D, word2W, cosD, cosW = biClustering.BiClustering(M, 200, 800)
 assign = np.array([-1]*M.shape[0])
 for key, value in doc2D.iteritems():
     for v in value:
         assign[v] = key
 
-with open("dev_docCluster.txt", 'w') as dc:
+with open("test_docCluster.txt", 'w') as dc:
     for idx, item in enumerate(assign):
         dc.write("%d %d\n" % (idx,item))
-f1 = newEval.getF1("HW2_dev.gold_standards", "dev_docCluster.txt")
-print f1
-print cosD
-print cosW
-# # repeat for 10 times
+# f1 = newEval.getF1("HW2_dev.gold_standards", "dev_docCluster.txt")
+# print f1
+# print cosD
+# print cosW
+
+# repeat for 10 times
 # iter = 0
 # f1s = []
 # cosDs =[]
 # cosWs = []
 #
 # while iter < 10:
-#     doc2D, word2W, cosD, cosW = biClustering.BiClustering(M, 200, 900)
+#     doc2D, word2W, cosD, cosW = biClustering_wf.BiClustering(M, 200, 800)
 #
 #     #print(" %s seconds " % (time.time()-start))
 #     #print len(doc2D)
@@ -84,7 +86,7 @@ print cosW
 #         for v in value:
 #             assign[v] = key
 #
-#     with open("dev_docCluster.txt", 'w') as dc:
+#     with open("_docCluster.txt", 'w') as dc:
 #         for idx, item in enumerate(assign):
 #             dc.write("%d %d\n" % (idx,item))
 #     f1 = newEval.getF1("HW2_dev.gold_standards", "dev_docCluster.txt")
@@ -105,8 +107,12 @@ print cosW
 # print "!!!"
 # print "The mean of F1 is %f" % np.mean(f1s)
 # print "The variance of F1 is %f" % np.var(f1s)
-# print "The max of F1 is %F" % np.max(f1s)
-# #print "The F1 of best sum of cosine similarity is" %
+# print "The max of F1 is %f" % np.max(f1s)
+# print "The F1 of best sum of cosine similarity is %f" % f1s[np.argmax(cosDs)]
+# print "The mean of cosW is %f" % np.mean(cosWs)
+# print "The variance of cosW is %f" % np.var(cosWs)
+# print "The max of cosW is %f" % np.max(cosWs)
+
 
 
 # # get word clusters and write to file using word dictionary
